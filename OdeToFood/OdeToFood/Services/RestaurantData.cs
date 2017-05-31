@@ -9,10 +9,12 @@ namespace OdeToFood.Services
     public interface IRestaurantData
     {
         IEnumerable<Restaurants> GetAll();
+        Restaurants Get(int id);
+        Restaurants Add(Restaurants newRestaurant);
     }
     public class InMemoryRestaurantData : IRestaurantData
     {
-        public InMemoryRestaurantData()
+        static  InMemoryRestaurantData()
         {
             _restaurants = new List<Restaurants>
             {
@@ -27,6 +29,18 @@ namespace OdeToFood.Services
             return _restaurants;
         }
 
-        List<Restaurants> _restaurants;
+        public Restaurants Get(int id)
+        {
+            return _restaurants.FirstOrDefault(r => r.Id == id);
+        }
+
+        public Restaurants Add(Restaurants newRestaurant)
+        {
+            newRestaurant.Id = _restaurants.Max(r => r.Id) + 1;
+            _restaurants.Add(newRestaurant);
+            return newRestaurant;
+        }
+
+        static List<Restaurants> _restaurants;
     }
 }
