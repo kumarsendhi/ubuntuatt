@@ -52,6 +52,32 @@ namespace OdeToFood.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var model = _restaurantData.Get(id);
+            if(model == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id,RestaurantEditViewModel model)
+        {
+            var restaurant = _restaurantData.Get(id);
+            if (ModelState.IsValid)
+            {
+                restaurant.Cuisine = model.Cuisine;
+                restaurant.Name = model.Name;
+                _restaurantData.Commit();
+                return RedirectToAction("Details", new { id = restaurant.Id });
+            }
+            return View(restaurant);
+        }
+
         [HttpPost]
         public IActionResult Create(RestaurantEditViewModel model)
         {
@@ -62,6 +88,7 @@ namespace OdeToFood.Controllers
                 newRestaurant.Name = model.Name;
 
                 newRestaurant = _restaurantData.Add(newRestaurant);
+                _restaurantData.Commit();
 
                 // return View("Details", newRestaurant);
 
