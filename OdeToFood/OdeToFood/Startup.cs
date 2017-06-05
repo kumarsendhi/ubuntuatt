@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Routing;
 using OdeToFood.Services;
 using OdeToFood.Models;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace OdeToFood
 {
@@ -36,7 +38,8 @@ namespace OdeToFood
             services.AddSingleton<IGreeter, Greeter>();
             //services.AddScoped<IRestaurantData, InMemoryRestaurantData>();
             services.AddScoped<IRestaurantData, SqlRestaurantData>();
-            services.AddDbContext<OdeToFoodDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<OdeToFoodDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<OdeToFoodDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +55,7 @@ namespace OdeToFood
 
             //app.UseStaticFiles();
             //app.UseFileServer();
-
+            app.UseIdentity();
             // app.UseMvcWithDefaultRoute();
 
             app.UseMvc(ConfigureRoutes);
