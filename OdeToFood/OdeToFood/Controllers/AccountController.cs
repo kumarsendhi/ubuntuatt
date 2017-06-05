@@ -31,7 +31,7 @@ namespace OdeToFood.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User() { UserName = model.Username};
+                var user = new User() { UserName = model.UserName, FirstName=model.FirstName, LastName=model.LastName, Email=model.Email,AlternateEmail=model.AlternateEmail,PhoneNumber=model.PhoneNumber,Organisation=model.Organisation,Position=model.Position};
 
                var createResult=  await _userManager.CreateAsync(user, model.Password);
                 if (createResult.Succeeded)
